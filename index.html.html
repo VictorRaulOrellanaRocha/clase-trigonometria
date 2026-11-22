@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrigoMágica — Modo Clase en Vivo</title>
+  <style>
+    :root {
+      --bg-paper: #F1F5F9;
+      --grid-line: #E2E8F0;
+      --slate-dark: #0F172A;
+      --slate-mid: #334155;
+      --slate-light: #64748B;
+      --mint: #10B981;
+      --mint-light: #D1FAE5;
+      --mint-dark: #065F46;
+      --coral: #F43F5E;
+      --coral-light: #FFE4E6;
+      --coral-dark: #9F1239;
+      --yellow: #F59E0B;
+      --yellow-light: #FEF3C7;
+      --yellow-highlight: #FDE047;
+      --blue: #2563EB;
+      --blue-light: #DBEAFE;
+      --blue-dark: #1E40AF;
+      --purple: #7C3AED;
+      --purple-light: #EDE9FE;
+      --white: #FFFFFF;
+      --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 8px 20px rgba(15, 23, 42, 0.09);
+      --shadow-lg: 0 14px 32px rgba(15, 23, 42, 0.14);
+      --radius-md: 14px;
+      --radius-lg: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-paper);
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 32px 32px;
+      color: var(--slate-dark);
+      line-height: 1.6;
+      padding-bottom: 95px;
+      font-size: 16.5px;
+    }
+
+    /* Tipografía Matemática Clara para Compartir Pantalla */
+    .math {
+      font-family: 'Cambria Math', 'Times New Roman', Georgia, serif;
+      font-size: 1.18em;
+      letter-spacing: 0.02em;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      vertical-align: middle;
+    }
+
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 5px;
+      font-size: 0.94em;
+    }
+
+    .frac > span:first-child {
+      border-bottom: 2px solid currentColor;
+      padding: 0 6px 2px 6px;
+      line-height: 1.15;
+    }
+
+    .frac > span:last-child {
+      padding: 2px 6px 0 6px;
+      line-height: 1.15;
+    }
+
+    sup {
+      font-size: 0.72em;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+      top: -0.45em;
+    }
+
+    .sqrt {
+      display: inline-flex;
+      align-items: center;
+    }
+    .sqrt-rad {
+      border-top: 1.8px solid currentColor;
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+
+    /* Header Superior */
+    header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: var(--white);
+      padding: 16px 24px;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 120;
+    }
+
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--mint) 0%, #34D399 100%);
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+      color: var(--slate-dark);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      font-size: 0.84rem;
+      color: #CBD5E1;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 9px 15px;
+      border-radius: 11px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-action.teacher-mode-active {
+      background: var(--yellow);
+      color: var(--slate-dark);
+      border-color: var(--yellow);
+    }
+
+    /* Stepper / Ruta de Aprendizaje */
+    .stepper-wrapper {
+      background: var(--white);
+      border-bottom: 2px solid #E2E8F0;
+      padding: 14px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stepper-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      background: #E2E8F0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(90deg, var(--mint), var(--blue));
+      border-radius: 99px;
+      transition: width 0.35s ease;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 500px) {
+      .tabs { grid-template-columns: 1fr; }
+    }
+
+    .tab-btn {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: var(--radius-md);
+      padding: 11px 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--blue);
+      background: var(--white);
+    }
+
+    .tab-btn.active {
+      border-color: var(--slate-dark);
+      background: var(--slate-dark);
+      color: var(--white);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tab-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .tab-1 .tab-badge { background: var(--mint-light); color: var(--mint-dark); }
+    .tab-2 .tab-badge { background: var(--blue-light); color: var(--blue-dark); }
+    .tab-3 .tab-badge { background: var(--coral-light); color: var(--coral-dark); }
+    .tab-4 .tab-badge { background: var(--yellow-light); color: #92400E; }
+
+    .tab-info strong {
+      display: block;
+      font-size: 0.94rem;
+      line-height: 1.2;
+    }
+
+    .tab-info span {
+      font-size: 0.77rem;
+      opacity: 0.82;
+    }
+
+    /* Contenedor Principal */
+    main {
+      max-width: 1180px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+
+    .module-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .module-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Banner del Profesor */
+    .professor-banner {
+      background: var(--white);
+      border-left: 7px solid var(--mint);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .professor-banner.coral { border-left-color: var(--coral); }
+    .professor-banner.blue { border-left-color: var(--blue); }
+    .professor-banner.yellow { border-left-color: var(--yellow); }
+
+    .prof-avatar {
+      font-size: 2.3rem;
+      background: var(--yellow-light);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .prof-content h2 {
+      font-size: 1.32rem;
+      margin-bottom: 5px;
+      color: var(--slate-dark);
+    }
+
+    .prof-content p {
+      color: var(--slate-mid);
+      font-size: 1rem;
+    }
+
+    .highlight-marker {
+      background: linear-gradient(120deg, var(--yellow-highlight) 0%, var(--yellow-highlight) 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 42%;
+      background-position: 0 88%;
+      padding: 0 3px;
+      font-weight: 700;
+      color: var(--slate-dark);
+    }
+
+    .teacher-script {
+      margin-top: 12px;
+      background: #FFFBEB;
+      border: 2px dashed #F59E0B;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      color: #92400E;
+      display: none;
+    }
+
+    body.show-teacher-scripts .teacher-script {
+      display: block;
+    }
+
+    /* Módulo 1: Las 4 Reglas de Oro */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .formula-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid #E2E8F0;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .formula-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--mint);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 9px;
+      border-bottom: 2px dashed #E2E8F0;
+    }
+
+    .card-title {
+      font-weight: 800;
+      font-size: 1.06rem;
+      color: var(--slate-dark);
+    }
+
+    .card-tag {
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--mint-light);
+      color: var(--mint-dark);
+    }
+
+    .formula-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .formula-item {
+      background: #F8FAFC;
+      padding: 9px 13px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .formula-tip {
+      font-size: 0.82rem;
+      color: var(--slate-light);
+      font-weight: 600;
+    }
+
+    /* Círculo Unitario Interactivo */
+    .unit-circle-container {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 2px solid #E2E8F0;
+      margin-bottom: 26px;
+    }
+
+    .circle-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 26px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 800px) {
+      .circle-layout { grid-template-columns: 1fr; }
+    }
+
+    .quadrant-box {
+      width: 280px;
+      height: 280px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 4px solid var(--slate-dark);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      box-shadow: var(--shadow-md);
+    }
+
+    .quad-btn {
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .quad-btn:hover { filter: brightness(0.95); }
+    .quad-btn.active { box-shadow: inset 0 0 0 4px var(--slate-dark); transform: scale(0.98); }
+
+    .q2 { background: #FFE4E6; color: #9F1239; }
+    .q1 { background: #D1FAE5; color: #065F46; }
+    .q3 { background: #FEF3C7; color: #92400E; }
+    .q4 { background: #DBEAFE; color: #1E40AF; }
+
+    .quad-word { font-size: 1.25rem; font-weight: 900; }
+    .quad-sub { font-size: 0.76rem; font-weight: 700; margin-top: 2px; }
+
+    .quad-info-panel {
+      background: #F8FAFC;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border: 2px solid #CBD5E1;
+    }
+
+    .formula-pill {
+      display: inline-block;
+      background: var(--slate-dark);
+      color: var(--white);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      margin: 8px 0 10px;
+    }
+
+    /* Tabla de Ángulos Notables */
+    .angles-table-wrap {
+      overflow-x: auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-md);
+      border: 2px solid #E2E8F0;
+    }
+
+    table.notable-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    table.notable-table th, table.notable-table td {
+      padding: 11px 9px;
+      border: 1.5px solid #E2E8F0;
+    }
+
+    table.notable-table th {
+      background: var(--slate-dark);
+      color: var(--white);
+    }
+
+    table.notable-table tr:nth-child(even) {
+      background: #F8FAFC;
+    }
+
+    /* =========================================================
+       PIZARRA INTERACTIVA "UNO A LA VEZ" (MÓDULOS 2 Y 3)
+       ========================================================= */
+    .board-controls-top {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      border: 2px solid #E2E8F0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .board-top-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .board-top-header span {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--slate-mid);
+    }
+
+    .view-mode-toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pill-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .ex-pill {
+      padding: 7px 13px;
+      border-radius: 10px;
+      border: 2px solid #CBD5E1;
+      background: #F8FAFC;
+      font-weight: 800;
+      font-size: 0.86rem;
+      cursor: pointer;
+      color: var(--slate-dark);
+      transition: all 0.15s;
+    }
+
+    .ex-pill:hover {
+      border-color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    .ex-pill.active {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    .ex-pill.eq.active {
+      background: var(--coral);
+      border-color: var(--coral);
+      box-shadow: 0 3px 8px rgba(244, 63, 94, 0.3);
+    }
+
+    /* Tarjeta Pizarra Grande */
+    .stage-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 2.5px solid #CBD5E1;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .stage-header {
+      background: #F8FAFC;
+      padding: 20px 26px;
+      border-bottom: 2px solid #E2E8F0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stage-badge {
+      background: var(--blue);
+      color: var(--white);
+      font-weight: 800;
+      padding: 7px 14px;
+      border-radius: 11px;
+      font-size: 0.95rem;
+    }
+
+    .stage-badge.eq {
+      background: var(--coral);
+    }
+
+    .stage-problem {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--slate-dark);
+      background: var(--white);
+      padding: 12px 20px;
+      border-radius: 14px;
+      border: 2px solid #CBD5E1;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .typo-alert {
+      background: var(--yellow-light);
+      color: #92400E;
+      border: 1.5px solid #F59E0B;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-top: 10px;
+      display: inline-block;
+    }
+
+    .stage-body {
+      padding: 24px 26px;
+    }
+
+    /* Caja destacada: TIP DEL PROFE PARA ESTE EJERCICIO */
+    .exercise-tip-box {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      border-left: 6px solid #D97706;
+      border-radius: 14px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      color: #78350F;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .exercise-tip-box strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      color: #92400E;
+    }
+
+    .strategy-box {
+      background: var(--blue-light);
+      color: #1E3A8A;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 0.98rem;
+    }
+
+    .action-bar-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-pill {
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-blue { background: var(--blue); color: var(--white); }
+    .btn-blue:hover { background: var(--blue-dark); }
+    .btn-mint { background: var(--mint); color: var(--white); }
+    .btn-mint:hover { background: var(--mint-dark); }
+    .btn-coral { background: var(--coral); color: var(--white); }
+    .btn-coral:hover { background: var(--coral-dark); }
+    .btn-gray { background: #E2E8F0; color: var(--slate-dark); }
+    .btn-gray:hover { background: #CBD5E1; }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .step-item {
+      display: none;
+      background: #F8FAFC;
+      border-left: 5px solid var(--mint);
+      padding: 16px 20px;
+      border-radius: 0 14px 14px 0;
+      border-top: 1px solid #E2E8F0;
+      border-right: 1px solid #E2E8F0;
+      border-bottom: 1px solid #E2E8F0;
+      animation: slideIn 0.25s ease;
+    }
+
+    .step-item.visible {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .step-tag {
+      background: var(--mint);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-right: 8px;
+    }
+
+    .step-desc {
+      font-weight: 600;
+      color: var(--slate-mid);
+      font-size: 1rem;
+    }
+
+    .step-formula {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--slate-dark);
+      margin-top: 8px;
+      padding-left: 6px;
+    }
+
+    .final-banner {
+      display: none;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+      border: 2.5px solid var(--mint);
+      border-radius: 16px;
+      padding: 18px 22px;
+      color: #064E3B;
+      font-size: 1.15rem;
+      font-weight: 800;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .final-banner.visible {
+      display: flex;
+    }
+
+    .stage-footer-nav {
+      background: #F8FAFC;
+      padding: 14px 26px;
+      border-top: 2px solid #E2E8F0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Módulo 4: Simulador y Resumen */
+    .quiz-box {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      border: 2.5px solid #CBD5E1;
+      margin-bottom: 28px;
+    }
+
+    .quiz-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-weight: 800;
+      color: var(--slate-mid);
+    }
+
+    .quiz-question {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      color: var(--slate-dark);
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .quiz-opt-btn {
+      background: #F8FAFC;
+      border: 2px solid #CBD5E1;
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .quiz-opt-btn:hover:not(:disabled) {
+      border-color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    .quiz-opt-btn.correct {
+      background: var(--mint-light);
+      border-color: var(--mint);
+      color: #065F46;
+    }
+
+    .quiz-opt-btn.wrong {
+      background: var(--coral-light);
+      border-color: var(--coral);
+      color: #9F1239;
+    }
+
+    .quiz-feedback {
+      padding: 15px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .tip-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border-top: 6px solid var(--yellow);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tip-card h4 {
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+      color: var(--slate-dark);
+    }
+
+    .tip-card p {
+      font-size: 0.94rem;
+      color: var(--slate-mid);
+    }
+
+    /* Barra Flotante Inferior de Navegación de Clase */
+    .bottom-class-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--slate-dark);
+      color: var(--white);
+      padding: 12px 24px;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.2);
+      z-index: 150;
+    }
+
+    .bottom-bar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stage-indicator {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #E2E8F0;
+    }
+
+    /* Confeti Canvas */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @media print {
+      header, .stepper-wrapper, .bottom-class-bar, .board-controls-top, .action-bar-steps, .stage-footer-nav, .quiz-box {
+        display: none !important;
+      }
+      .module-section, .step-item, .final-banner {
+        display: block !important;
+      }
+      body {
+        background: white;
+        padding-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">📐</div>
+        <div class="brand-text">
+          <h1>TrigoMágica — Modo Clase en Vivo</h1>
+          <p>Presentación paso a paso para compartir pantalla y dominar Trigonometría</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-action" id="btnTeacherMode" onclick="toggleTeacherMode()">
+          👩‍🏫 Guión del Profe: <span id="teacherModeLabel">OFF</span>
+        </button>
+        <button class="btn-action" onclick="window.print()">
+          🖨️ Imprimir Guía
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- RUTA DE APRENDIZAJE (STEPPER) -->
+  <div class="stepper-wrapper">
+    <div class="stepper-inner">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn tab-1 active" id="tabBtn0" onclick="goToModule(0)">
+          <div class="tab-badge">1</div>
+          <div class="tab-info">
+            <strong>Lección Inicial</strong>
+            <span>Las 4 Reglas de Oro</span>
+          </div>
+        </button>
+        <button class="tab-btn tab-2" id="tabBtn1" onclick="goToModule(1)">
+          <div class="tab-badge">2</div>
+          <div class="tab-info">
+            <strong>Identidades (11 Ej.)</strong>
+            <span>Demostraciones 1 a 1</span>
+          </div>
+        </button>
+        <button class="tab-btn tab-3" id="tabBtn2" onclick="goToModule(2)">
+          <div class="tab-badge">3</div>
+          <div class="tab-info">
+            <strong>Ecuaciones (17 Ej.)</strong>
+            <span>Intervalo [0°, 360°)</span>
+          </div>
+        </button>
+        <button class="tab-btn tab-4" id="tabBtn3" onclick="goToModule(3)">
+          <div class="tab-badge">4</div>
+          <div class="tab-info">
+            <strong>Tips &amp; Evaluación</strong>
+            <span>Examen Final de 8 Preguntas</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- =========================================================
+         ETAPA 1: LECCIÓN INICIAL & LAS 4 REGLAS DE ORO
+         ========================================================= -->
+    <section id="mod0" class="module-section active">
+      <div class="professor-banner">
+        <div class="prof-avatar">🧠</div>
+        <div class="prof-content">
+          <h2>Etapa 1: ¡Quítales la máscara! El secreto para no tener miedo</h2>
+          <p>
+            Antes de tocar un solo ejercicio, recuerda esto: en trigonometría hay 6 nombres, pero <span class="highlight-marker">solo mandan dos: Seno (sen) y Coseno (cos)</span>. 
+            Todos los demás son "disfraces" hechos con ellos dos. Si dominas estas 4 tarjetas y el reloj de "TODOS SIN TACOS", tienes el 80% de la prueba ganada.
+          </p>
+          <div class="teacher-script">
+            <strong>💬 Díselo así a tu estudiante:</strong> "Imagina que <em>sen</em> y <em>cos</em> son los ingredientes básicos (harina y agua) y la tangente o secante son pasteles ya armados. Siempre que nos tranquemos, desarmamos todo en harina y agua."
+          </div>
+        </div>
+      </div>
+
+      <!-- LAS 4 REGLAS DE ORO -->
+      <div class="cards-grid">
+        <div class="formula-card">
+          <div class="card-header">
+            <span class="card-title">Regla 1: Quitar el Disfraz</span>
+            <span class="card-tag">Cociente y Recíprocas</span>
+          </div>
+          <ul class="formula-list">
+            <li class="formula-item">
+              <span class="math">tg x = <span class="frac"><span>sen x</span><span>cos x</span></span></span>
+              <span class="formula-tip">Seno arriba, coseno abajo</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">ctg x = <span class="frac"><span>cos x</span><span>sen x</span></span> = <span class="frac"><span>1</span><span>tg x</span></span></span>
+              <span class="formula-tip">Al revés de la tangente</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">sec x = <span class="frac"><span>1</span><span>cos x</span></span></span>
+              <span class="formula-tip">S va con C</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">csc x = <span class="frac"><span>1</span><span>sen x</span></span></span>
+              <span class="formula-tip">C va con S</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="formula-card">
+          <div class="card-header">
+            <span class="card-title">Regla 2: Pitágoras (La Reina)</span>
+            <span class="card-tag">Súper usada</span>
+          </div>
+          <ul class="formula-list">
+            <li class="formula-item">
+              <span class="math">sen<sup>2</sup>x + cos<sup>2</sup>x = 1</span>
+              <span class="formula-tip">Siempre suman 1</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">sen<sup>2</sup>x = 1 − cos<sup>2</sup>x</span>
+              <span class="formula-tip">Para cambiar seno a coseno</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">cos<sup>2</sup>x = 1 − sen<sup>2</sup>x</span>
+              <span class="formula-tip">Para cambiar coseno a seno</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">1 + tg<sup>2</sup>x = sec<sup>2</sup>x</span>
+              <span class="formula-tip">1 + ctg<sup>2</sup>x = csc<sup>2</sup>x</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="formula-card">
+          <div class="card-header">
+            <span class="card-title">Regla 3: Suma y Resta (A ± B)</span>
+            <span class="card-tag">Abrir paréntesis</span>
+          </div>
+          <ul class="formula-list">
+            <li class="formula-item">
+              <span class="math">sen(A ± B) = sen A cos B ± cos A sen B</span>
+              <span class="formula-tip">Mezcla y respeta signo</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">cos(A ± B) = cos A cos B ∓ sen A sen B</span>
+              <span class="formula-tip">Agrupa y cambia signo</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">tg(A ± B) = <span class="frac"><span>tg A ± tg B</span><span>1 ∓ tg A · tg B</span></span></span>
+              <span class="formula-tip">Arriba igual, abajo opuesto</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="formula-card">
+          <div class="card-header">
+            <span class="card-title">Regla 4: Ángulo Doble y Mitad</span>
+            <span class="card-tag">Atajos clave</span>
+          </div>
+          <ul class="formula-list">
+            <li class="formula-item">
+              <span class="math">sen(2x) = 2 sen x cos x</span>
+              <span class="formula-tip">Aparece en 6 ejercicios</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">cos(2x) = cos<sup>2</sup>x − sen<sup>2</sup>x</span>
+              <span class="formula-tip">= 1 − 2sen<sup>2</sup>x = 2cos<sup>2</sup>x − 1</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">tg(<span class="frac"><span>x</span><span>2</span></span>) = <span class="frac"><span>sen x</span><span>1 + cos x</span></span></span>
+              <span class="formula-tip">ctg<sup>2</sup>(x/2) = (1+cos x)/(1−cos x)</span>
+            </li>
+            <li class="formula-item">
+              <span class="math">cos A cos B = <span class="frac"><span>1</span><span>2</span></span>[cos(A+B)+cos(A−B)]</span>
+              <span class="formula-tip">Producto a suma</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CÍRCULO UNITARIO INTERACTIVO -->
+      <div class="unit-circle-container">
+        <h2>🎯 El Truco del Reloj: "TODOS SIN TACOS" (Haz clic en cada cuadrante)</h2>
+        <p style="color: var(--slate-mid); margin-top: 4px;">
+          En las ecuaciones entre 0° y 360° casi siempre hay <strong>DOS respuestas</strong>. Haz clic en cada parte del círculo para enseñarle cómo hallar el segundo ángulo:
+        </p>
+
+        <div class="circle-layout">
+          <div class="quadrant-box">
+            <button class="quad-btn q2" onclick="selectQuadrant(2, this)">
+              <span class="quad-word">SIN</span>
+              <span class="quad-sub">Cuadrante II (90°–180°)</span>
+            </button>
+            <button class="quad-btn q1 active" onclick="selectQuadrant(1, this)">
+              <span class="quad-word">TODOS</span>
+              <span class="quad-sub">Cuadrante I (0°–90°)</span>
+            </button>
+            <button class="quad-btn q3" onclick="selectQuadrant(3, this)">
+              <span class="quad-word">TA</span>
+              <span class="quad-sub">Cuadrante III (180°–270°)</span>
+            </button>
+            <button class="quad-btn q4" onclick="selectQuadrant(4, this)">
+              <span class="quad-word">COS</span>
+              <span class="quad-sub">Cuadrante IV (270°–360°)</span>
+            </button>
+          </div>
+
+          <div class="quad-info-panel" id="quadInfoPanel">
+            <h3>Cuadrante I: ¡TODOS son positivos! (+)</h3>
+            <p>Aquí viven los ángulos agudos (0° a 90°). Tanto el <strong>seno</strong>, como el <strong>coseno</strong> y la <strong>tangente</strong> son positivos.</p>
+            <div class="formula-pill">Fórmula del ángulo: x = α (el ángulo directo)</div>
+            <p><strong>Ejemplo:</strong> Si <span class="math">sen x = 1/2</span>, el primer ángulo directo es <strong>30°</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLA DE ÁNGULOS NOTABLES -->
+      <div class="angles-table-wrap">
+        <h3>📊 Tabla Rápida de Ángulos Notables (Para tener a mano en clase)</h3>
+        <table class="notable-table">
+          <thead>
+            <tr>
+              <th>Función</th>
+              <th>0° (0)</th>
+              <th>30° (π/6)</th>
+              <th>45° (π/4)</th>
+              <th>60° (π/3)</th>
+              <th>90° (π/2)</th>
+              <th>180° (π)</th>
+              <th>270° (3π/2)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>sen x</strong></td>
+              <td>0</td>
+              <td><span class="frac"><span>1</span><span>2</span></span></td>
+              <td><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">2</span></span></span><span>2</span></span></td>
+              <td><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span></td>
+              <td>1</td>
+              <td>0</td>
+              <td>−1</td>
+            </tr>
+            <tr>
+              <td><strong>cos x</strong></td>
+              <td>1</td>
+              <td><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span></td>
+              <td><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">2</span></span></span><span>2</span></span></td>
+              <td><span class="frac"><span>1</span><span>2</span></span></td>
+              <td>0</td>
+              <td>−1</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td><strong>tg x</strong></td>
+              <td>0</td>
+              <td><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>3</span></span></td>
+              <td>1</td>
+              <td><span class="sqrt">√<span class="sqrt-rad">3</span></span></td>
+              <td>No existe</td>
+              <td>0</td>
+              <td>No existe</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         ETAPA 2: IDENTIDADES TRIGONOMÉTRICAS (PIZARRA UNO A LA VEZ)
+         ========================================================= -->
+    <section id="mod1" class="module-section">
+      <div class="professor-banner blue">
+        <div class="prof-avatar">⚖️</div>
+        <div class="prof-content">
+          <h2>Etapa 2: Identidades Trigonométricas (Ejercicio por Ejercicio)</h2>
+          <p>
+            Regla de oro: <span class="highlight-marker">El signo "=" es una pared de cristal.</span> Nunca pases términos de un lado al otro. 
+            Selecciona un ejercicio abajo, lee el <strong>Tip del Profe</strong> con tu estudiante y ve revelando paso por paso.
+          </p>
+          <div class="teacher-script">
+            <strong>💬 Díselo así a tu estudiante:</strong> "Siempre atacamos el lado que se ve más largo o complicado, porque en matemáticas es mucho más fácil limpiar y encoger algo grande que inflar algo pequeño."
+          </div>
+        </div>
+      </div>
+
+      <!-- Selector de Ejercicios de Identidades -->
+      <div class="board-controls-top">
+        <div class="board-top-header">
+          <span>📌 Selecciona el ejercicio de Identidades que vas a explicar:</span>
+          <span id="idCounterLabel" style="color: var(--blue);">Ejercicio 1 de 11</span>
+        </div>
+        <div class="pill-selector" id="idPillSelector"></div>
+      </div>
+
+      <!-- Pizarra Enfocada de Identidades -->
+      <div id="idStageContainer"></div>
+    </section>
+
+    <!-- =========================================================
+         ETAPA 3: ECUACIONES TRIGONOMÉTRICAS (PIZARRA UNO A LA VEZ)
+         ========================================================= -->
+    <section id="mod2" class="module-section">
+      <div class="professor-banner coral">
+        <div class="prof-avatar">🕵️‍♀️</div>
+        <div class="prof-content">
+          <h2>Etapa 3: Ecuaciones Trigonométricas en [0°, 360°)</h2>
+          <p>
+            Aquí sí despejamos la incógnita <span class="math">x</span> pasando términos de un lado al otro. 
+            <span class="highlight-marker">Usa el truco del "Cambio de Ropa" (sustituir sen x o tg x por una letra "u")</span> cuando veas ecuaciones cuadráticas, y recuerda buscar todos los ángulos en el círculo.
+          </p>
+          <div class="teacher-script">
+            <strong>💬 Díselo así a tu estudiante:</strong> "Cuando llegues a algo como sen(x) = 1/2, el ejercicio de álgebra terminó y empieza el juego del reloj: ¿en qué dos cuadrantes el seno es positivo?"
+          </div>
+        </div>
+      </div>
+
+      <!-- Selector de Ejercicios de Ecuaciones -->
+      <div class="board-controls-top">
+        <div class="board-top-header">
+          <span>📌 Selecciona el ejercicio de Ecuaciones que vas a explicar:</span>
+          <span id="eqCounterLabel" style="color: var(--coral);">Ejercicio 1 de 17</span>
+        </div>
+        <div class="pill-selector" id="eqPillSelector"></div>
+      </div>
+
+      <!-- Pizarra Enfocada de Ecuaciones -->
+      <div id="eqStageContainer"></div>
+    </section>
+
+    <!-- =========================================================
+         ETAPA 4: TIPS DE EXAMEN & EVALUACIÓN FINAL INTERACTIVA
+         ========================================================= -->
+    <section id="mod3" class="module-section">
+      <div class="professor-banner yellow">
+        <div class="prof-avatar">🏆</div>
+        <div class="prof-content">
+          <h2>Etapa 4: Resumen de Super-Tips y Evaluación Final (8 Preguntas)</h2>
+          <p>
+            ¡Felicidades por llegar hasta aquí! Repasa estos 6 consejos definitivos y pon a prueba todo lo aprendido en este examen interactivo de 8 preguntas.
+          </p>
+        </div>
+      </div>
+
+      <!-- EXAMEN INTERACTIVO DE 8 PREGUNTAS -->
+      <div class="quiz-box">
+        <div class="quiz-progress">
+          <span id="quizCounter">Pregunta 1 de 8</span>
+          <span id="quizScore" style="color: var(--mint-dark);">Aciertos: 0 / 8</span>
+        </div>
+        <div class="quiz-question" id="quizQuestion">Cargando pregunta...</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;">
+          <button class="btn-pill btn-gray" onclick="restartQuiz()">🔄 Reiniciar Evaluación</button>
+          <button class="btn-pill btn-blue" id="btnNextQuiz" onclick="nextQuizQuestion()" style="display:none;">Siguiente Pregunta ➡️</button>
+        </div>
+      </div>
+
+      <!-- 6 TIPS DE ORO PARA EL EXAMEN -->
+      <h3 style="margin-bottom: 16px; font-size: 1.3rem;">💡 Los 6 Super-Tips del Profesor para el día del Examen</h3>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <h4>1. El truco de la calculadora (x = 30°)</h4>
+          <p>En cualquier identidad del examen, reemplaza la letra por <strong>30°</strong> en tu calculadora en ambos lados del igual. Si te da el mismo número decimal, ¡sabes con 100% de seguridad que la identidad está bien planteada!</p>
+        </div>
+        <div class="tip-card">
+          <h4>2. Prohibido tachar "sen x" o "cos x"</h4>
+          <p>Si tienes <span class="math">sen 2x · cos x = 6 sen³x</span>, <strong>NUNCA dividas entre sen x</strong> para eliminarlo, porque perderás las respuestas 0° y 180°. Pasa todo a un lado y <strong>factoriza</strong>.</p>
+        </div>
+        <div class="tip-card">
+          <h4>3. Un solo idioma antes de despejar</h4>
+          <p>Si una ecuación mezcla <span class="math">cos²x</span> y <span class="math">sen x</span>, usa <span class="math">cos²x = 1 − sen²x</span> para que toda la ecuación hable únicamente el idioma del seno.</p>
+        </div>
+        <div class="tip-card">
+          <h4>4. Cuidado con los ángulos prohibidos (90° y 270°)</h4>
+          <p>Si el problema original tiene <span class="math">tg x</span> o <span class="math">sec x</span>, recuerda que en <strong>90° y 270°</strong> el coseno es 0 (división por cero). Si salen como respuesta, ¡táchalos!</p>
+        </div>
+        <div class="tip-card">
+          <h4>5. Verifica si elevaste al cuadrado</h4>
+          <p>En ecuaciones como <span class="math">3 sen x = 2 − 2 cos x</span>, al elevar ambos lados al cuadrado aparecen "soluciones fantasma". Prueba tus ángulos en la ecuación original para quedarte solo con los reales.</p>
+        </div>
+        <div class="tip-card">
+          <h4>6. La "Carita Feliz" en fracciones</h4>
+          <p>Cuando sumes dos fracciones trigonométricas distintas, multiplica en cruz arriba y multiplica los denominadores abajo. Casi siempre aparece <span class="math">sen²x + cos²x = 1</span> mágicamente.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- BARRA INFERIOR DE NAVEGACIÓN DE LA CLASE -->
+  <div class="bottom-class-bar">
+    <div class="bottom-bar-inner">
+      <button class="btn-pill btn-gray" id="btnPrevModule" onclick="prevModule()">⬅️ Etapa Anterior</button>
+      <span class="stage-indicator" id="stageIndicatorText">Etapa 1 de 4: Lección Inicial y Reglas de Oro</span>
+      <button class="btn-pill btn-mint" id="btnNextModule" onclick="nextModule()">Siguiente Etapa ➡️</button>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       DATOS COMPLETOS DE TODOS LOS EJERCICIOS CON TIPS ESPECÍFICOS
+       ========================================================================= */
+    const IDENTIDADES_DATA = [
+      {
+        num: "Ej. 1",
+        problem: `<span class="math"><span class="frac"><span>sen(A + B)</span><span>cos A · cos B</span></span> = tg A + tg B</span>`,
+        typoNote: "Nota de la guía: En la fotocopia el cos B aparece escrito abajo junto al cos A.",
+        tip: "💡 Tip del Profe para este ejercicio: Cuando veas un '+' o '−' DENTRO de un paréntesis como sen(A + B), jamás puedes repartir el seno como si fuera multiplicación. Usa siempre la fórmula de suma de ángulos y luego 'parte' la fracción en dos.",
+        strategy: "Atacamos el lado izquierdo abriendo sen(A + B) y separando la fracción en dos partes.",
+        steps: [
+          {
+            explain: "Abrimos el paréntesis de arriba con la fórmula sen(A + B) = sen A cos B + cos A sen B:",
+            math: `<span class="math"><span class="frac"><span>sen A · cos B + cos A · sen B</span><span>cos A · cos B</span></span></span>`
+          },
+          {
+            explain: "Separamos la fracción en dos fracciones individuales con el mismo denominador:",
+            math: `<span class="math"><span class="frac"><span>sen A · cos B</span><span>cos A · cos B</span></span> + <span class="frac"><span>cos A · sen B</span><span>cos A · cos B</span></span></span>`
+          },
+          {
+            explain: "Tachamos lo repetido arriba y abajo (cos B en la primera y cos A en la segunda):",
+            math: `<span class="math"><span class="frac"><span>sen A</span><span>cos A</span></span> + <span class="frac"><span>sen B</span><span>cos B</span></span></span>`
+          },
+          {
+            explain: "Aplicamos Regla 1 (sen/cos = tg) y llegamos al resultado:",
+            math: `<span class="math">tg A + tg B</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! El lado izquierdo es idéntico a tg A + tg B."
+      },
+      {
+        num: "Ej. 2 (sin nº)",
+        problem: `<span class="math"><span class="frac"><span>sen(x − y)</span><span>sen x · sen y</span></span> = ctg y − ctg x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Es el hermano gemelo del Ejercicio 1! La única diferencia es el signo menos (−) y que abajo hay senos en vez de cosenos, por eso al final aparecen cotangentes (cos/sen).",
+        strategy: "Abrimos sen(x − y) con signo menos y separamos en dos fracciones.",
+        steps: [
+          {
+            explain: "Aplicamos la fórmula de resta: sen(x − y) = sen x cos y − cos x sen y:",
+            math: `<span class="math"><span class="frac"><span>sen x · cos y − cos x · sen y</span><span>sen x · sen y</span></span></span>`
+          },
+          {
+            explain: "Partimos en dos fracciones respetando el signo menos en el medio:",
+            math: `<span class="math"><span class="frac"><span>sen x · cos y</span><span>sen x · sen y</span></span> − <span class="frac"><span>cos x · sen y</span><span>sen x · sen y</span></span></span>`
+          },
+          {
+            explain: "Simplificamos sen x en la primera fracción y sen y en la segunda:",
+            math: `<span class="math"><span class="frac"><span>cos y</span><span>sen y</span></span> − <span class="frac"><span>cos x</span><span>sen x</span></span></span>`
+          },
+          {
+            explain: "Como cos/sen = ctg, queda demostrado:",
+            math: `<span class="math">ctg y − ctg x</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Exactamente igual a ctg y − ctg x."
+      },
+      {
+        num: "Ej. 7",
+        problem: `<span class="math"><span class="frac"><span>cos 2A</span><span>1 − sen 2A</span></span> = <span class="frac"><span>1 + tg A</span><span>1 − tg A</span></span></span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Aquí hay dos trucos secretos que debes enseñarle: 1) Cambiar el '1' de abajo por (cos²A + sen²A) para armar un binomio al cuadrado, y 2) Dividir arriba y abajo entre cos A al final para que aparezca tg A.",
+        strategy: "Transformamos los ángulos dobles (2A) a ángulos simples (A) y factorizamos.",
+        steps: [
+          {
+            explain: "Arriba usamos cos 2A = cos²A − sen²A. Abajo cambiamos 1 por (cos²A + sen²A) y sen 2A por 2 sen A cos A:",
+            math: `<span class="math"><span class="frac"><span>cos<sup>2</sup>A − sen<sup>2</sup>A</span><span>cos<sup>2</sup>A − 2 sen A cos A + sen<sup>2</sup>A</span></span></span>`
+          },
+          {
+            explain: "Factorizamos: arriba diferencia de cuadrados (a+b)(a−b) y abajo trinomio cuadrado perfecto (a−b)²:",
+            math: `<span class="math"><span class="frac"><span>(cos A + sen A)(cos A − sen A)</span><span>(cos A − sen A)<sup>2</sup></span></span></span>`
+          },
+          {
+            explain: "Simplificamos un factor (cos A − sen A) de arriba con uno de abajo:",
+            math: `<span class="math"><span class="frac"><span>cos A + sen A</span><span>cos A − sen A</span></span></span>`
+          },
+          {
+            explain: "Dividimos los 4 términos entre cos A para convertir todo a tangente:",
+            math: `<span class="math"><span class="frac"><span><span class="frac"><span>cos A</span><span>cos A</span></span> + <span class="frac"><span>sen A</span><span>cos A</span></span></span><span><span class="frac"><span>cos A</span><span>cos A</span></span> − <span class="frac"><span>sen A</span><span>cos A</span></span></span></span> = <span class="frac"><span>1 + tg A</span><span>1 − tg A</span></span></span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Uno de los ejercicios más elegantes de la guía."
+      },
+      {
+        num: "Ej. 8",
+        problem: `<span class="math"><span class="frac"><span>sen(x − y)</span><span>cos(x + y)</span></span> = <span class="frac"><span>tg x − tg y</span><span>1 − tg x · tg y</span></span></span>`,
+        typoNote: "Detalle de imprenta: Con cos(x+y) abajo el denominador da (1 − tg x tg y), mientras que con cos(x−y) da (1 + tg x tg y).",
+        tip: "💡 Tip del Profe para este ejercicio: Siempre que quieras convertir una fracción de senos y cosenos en una fracción de tangentes, el truco universal es dividir cada término de arriba y de abajo entre (cos x · cos y).",
+        strategy: "Desarrollamos suma y resta de ángulos y dividimos todo entre cos x · cos y.",
+        steps: [
+          {
+            explain: "Abrimos arriba sen(x − y) y abajo cos(x + y):",
+            math: `<span class="math"><span class="frac"><span>sen x cos y − cos x sen y</span><span>cos x cos y − sen x sen y</span></span></span>`
+          },
+          {
+            explain: "Dividimos cada uno de los 4 términos entre (cos x · cos y):",
+            math: `<span class="math"><span class="frac"><span><span class="frac"><span>sen x cos y</span><span>cos x cos y</span></span> − <span class="frac"><span>cos x sen y</span><span>cos x cos y</span></span></span><span><span class="frac"><span>cos x cos y</span><span>cos x cos y</span></span> − <span class="frac"><span>sen x sen y</span><span>cos x cos y</span></span></span></span></span>`
+          },
+          {
+            explain: "Simplificamos los cosenos iguales y convertimos sen/cos en tg:",
+            math: `<span class="math"><span class="frac"><span>tg x − tg y</span><span>1 − tg x · tg y</span></span></span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! El truco de dividir entre cos x · cos y funciona siempre."
+      },
+      {
+        num: "Ej. 10",
+        problem: `<span class="math">sen x + sen(x + <span class="frac"><span>2π</span><span>3</span></span>) + sen(x + <span class="frac"><span>4π</span><span>3</span></span>) = 0</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡No te asustes por la letra π! Cambia π por 180° mentalmente: 2π/3 = 120° y 4π/3 = 240°. Con grados es 10 veces más fácil calcular sus senos y cosenos.",
+        strategy: "Convertimos radianes a grados (120° y 240°), abrimos los paréntesis y sumamos términos semejantes.",
+        steps: [
+          {
+            explain: "Reemplazamos 2π/3 = 120° y 4π/3 = 240°, y abrimos sen(A + B):",
+            math: `<span class="math">sen x + (sen x cos 120° + cos x sen 120°) + (sen x cos 240° + cos x sen 240°)</span>`
+          },
+          {
+            explain: "Sustituimos valores exactos: cos 120° = −1/2, sen 120° = √3/2, cos 240° = −1/2, sen 240° = −√3/2:",
+            math: `<span class="math">sen x − <span class="frac"><span>1</span><span>2</span></span>sen x + <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span>cos x − <span class="frac"><span>1</span><span>2</span></span>sen x − <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span>cos x</span>`
+          },
+          {
+            explain: "Sumamos los senos (1 − 1/2 − 1/2 = 0) y los cosenos (+√3/2 − √3/2 = 0):",
+            math: `<span class="math">0 + 0 = 0</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Todo se cancela limpiamente."
+      },
+      {
+        num: "Ej. 11 (Col 2)",
+        problem: `<span class="math">sen 2y = <span class="frac"><span>2</span><span>ctg y + tg y</span></span></span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Empieza por la derecha (la fracción) y aplica 'Quitar el Disfraz' a ctg y y tg y. Luego suma abajo usando la 'carita feliz' y verás aparecer la Regla de Oro (sen²y + cos²y = 1).",
+        strategy: "Trabajamos el lado derecho convirtiendo ctg y y tg y a sen y y cos y.",
+        steps: [
+          {
+            explain: "Quitamos los disfraces: ctg y = cos y / sen y, y tg y = sen y / cos y:",
+            math: `<span class="math"><span class="frac"><span>2</span><span><span class="frac"><span>cos y</span><span>sen y</span></span> + <span class="frac"><span>sen y</span><span>cos y</span></span></span></span></span>`
+          },
+          {
+            explain: "Sumamos las fracciones de abajo en cruz ('carita feliz'):",
+            math: `<span class="math"><span class="frac"><span>2</span><span><span class="frac"><span>cos<sup>2</sup>y + sen<sup>2</sup>y</span><span>sen y · cos y</span></span></span></span></span>`
+          },
+          {
+            explain: "Por Pitágoras, cos²y + sen²y = 1:",
+            math: `<span class="math"><span class="frac"><span>2</span><span><span class="frac"><span>1</span><span>sen y · cos y</span></span></span></span></span>`
+          },
+          {
+            explain: "Aplicamos extremos por extremos (ley de la oreja) y obtenemos la fórmula del ángulo doble:",
+            math: `<span class="math">2 · sen y · cos y = sen 2y</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Exactamente igual a sen 2y."
+      },
+      {
+        num: "Ej. 13",
+        problem: `<span class="math">(sen y + cos y)<sup>2</sup> = 1 + sen 2y</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Este es el favorito de los profesores en exámenes! El error típico de los estudiantes es poner sen²y + cos²y y olvidarse del '2·sen y·cos y' del medio. Recuérdale la canción: 'el primero al cuadrado, más el doble del primero por el segundo, más el segundo al cuadrado'.",
+        strategy: "Desarrollamos el cuadrado de binomio en el lado izquierdo.",
+        steps: [
+          {
+            explain: "Desarrollamos (a + b)² = a² + 2ab + b²:",
+            math: `<span class="math">sen<sup>2</sup>y + 2 · sen y · cos y + cos<sup>2</sup>y</span>`
+          },
+          {
+            explain: "Agrupamos los cuadrados: sen²y + cos²y = 1:",
+            math: `<span class="math">1 + 2 · sen y · cos y</span>`
+          },
+          {
+            explain: "Reconocemos que 2 · sen y · cos y es la fórmula de sen 2y:",
+            math: `<span class="math">1 + sen 2y</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado en 3 pasos súper fáciles!"
+      },
+      {
+        num: "Ej. 14",
+        problem: `<span class="math">cos(x + <span class="frac"><span>3π</span><span>2</span></span>) = sen x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Igual que en el ejercicio 10, cambia 3π/2 por 270°. Recuerda que en 270° (abajo del círculo), cos(270°) = 0 y sen(270°) = −1.",
+        strategy: "Abrimos cos(x + 270°) con la fórmula de suma de ángulos para el coseno.",
+        steps: [
+          {
+            explain: "Aplicamos cos(A + B) = cos A cos B − sen A sen B (con B = 270°):",
+            math: `<span class="math">cos x · cos(270°) − sen x · sen(270°)</span>`
+          },
+          {
+            explain: "Reemplazamos cos(270°) = 0 y sen(270°) = −1:",
+            math: `<span class="math">cos x · (0) − sen x · (−1)</span>`
+          },
+          {
+            explain: "Multiplicamos (menos por menos da más):",
+            math: `<span class="math">0 + sen x = sen x</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Da exactamente sen x."
+      },
+      {
+        num: "Ej. 16",
+        problem: `<span class="math">tg <span class="frac"><span>x</span><span>2</span></span> = <span class="frac"><span>sen x</span><span>1 + cos x</span></span></span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Mira el ángulo 'x' como si fuera el DOBLE de 'x/2'. Así puedes aplicar las fórmulas de ángulo doble en el lado derecho para cancelar el '1' de abajo.",
+        strategy: "Trabajamos el lado derecho escribiendo sen x y cos x en función de (x/2).",
+        steps: [
+          {
+            explain: "Usamos sen x = 2 sen(x/2) cos(x/2) arriba, y cos x = 2 cos²(x/2) − 1 abajo:",
+            math: `<span class="math"><span class="frac"><span>2 · sen(<span class="frac"><span>x</span><span>2</span></span>) · cos(<span class="frac"><span>x</span><span>2</span></span>)</span><span>1 + 2 cos<sup>2</sup>(<span class="frac"><span>x</span><span>2</span></span>) − 1</span></span></span>`
+          },
+          {
+            explain: "Abajo se cancelan 1 y −1:",
+            math: `<span class="math"><span class="frac"><span>2 · sen(<span class="frac"><span>x</span><span>2</span></span>) · cos(<span class="frac"><span>x</span><span>2</span></span>)</span><span>2 · cos<sup>2</sup>(<span class="frac"><span>x</span><span>2</span></span>)</span></span></span>`
+          },
+          {
+            explain: "Simplificamos el 2 y un cos(x/2):",
+            math: `<span class="math"><span class="frac"><span>sen(x/2)</span><span>cos(x/2)</span></span> = tg <span class="frac"><span>x</span><span>2</span></span></span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Una fórmula muy útil para tener en el formulario."
+      },
+      {
+        num: "Ej. 19",
+        problem: `<span class="math">cos <span class="frac"><span>3x</span><span>2</span></span> · cos <span class="frac"><span>5x</span><span>2</span></span> = <span class="frac"><span>1</span><span>2</span></span>(cos 4x + cos x)</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Cuando veas dos cosenos MULTIPLICÁNDOSE a un lado y SUMÁNDOSE al otro con un '1/2' afuera, es la fórmula de Producto a Suma: cos A · cos B = 1/2 [cos(A + B) + cos(A − B)]. Pon siempre el ángulo más grande (5x/2) primero para evitar signos negativos.",
+        strategy: "Aplicamos producto a suma poniendo A = 5x/2 y B = 3x/2.",
+        steps: [
+          {
+            explain: "Aplicamos cos A · cos B = 1/2 [cos(A + B) + cos(A − B)]:",
+            math: `<span class="math"><span class="frac"><span>1</span><span>2</span></span> [ cos(<span class="frac"><span>5x</span><span>2</span></span> + <span class="frac"><span>3x</span><span>2</span></span>) + cos(<span class="frac"><span>5x</span><span>2</span></span> − <span class="frac"><span>3x</span><span>2</span></span>) ]</span>`
+          },
+          {
+            explain: "Sumamos y restamos las fracciones homogéneas:",
+            math: `<span class="math"><span class="frac"><span>1</span><span>2</span></span> [ cos(<span class="frac"><span>8x</span><span>2</span></span>) + cos(<span class="frac"><span>2x</span><span>2</span></span>) ]</span>`
+          },
+          {
+            explain: "Simplificamos 8x/2 = 4x y 2x/2 = x:",
+            math: `<span class="math"><span class="frac"><span>1</span><span>2</span></span>(cos 4x + cos x)</span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Súper rápido con la fórmula de producto a suma."
+      },
+      {
+        num: "Ej. 22",
+        problem: `<span class="math">ctg<sup>2</sup><span class="frac"><span>x</span><span>2</span></span> = <span class="frac"><span>sec x + 1</span><span>sec x − 1</span></span></span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Empieza por el lado derecho quitando el disfraz a sec x (1/cos x). Al simplificar te quedará (1 + cos x)/(1 − cos x), que es la fórmula directa de ctg²(x/2).",
+        strategy: "Convertimos sec x a 1/cos x en el lado derecho y aplicamos ángulo mitad.",
+        steps: [
+          {
+            explain: "Cambiamos sec x por 1 / cos x arriba y abajo:",
+            math: `<span class="math"><span class="frac"><span><span class="frac"><span>1</span><span>cos x</span></span> + 1</span><span><span class="frac"><span>1</span><span>cos x</span></span> − 1</span></span></span>`
+          },
+          {
+            explain: "Sumamos y restamos con denominador común cos x:",
+            math: `<span class="math"><span class="frac"><span><span class="frac"><span>1 + cos x</span><span>cos x</span></span></span><span><span class="frac"><span>1 − cos x</span><span>cos x</span></span></span></span></span>`
+          },
+          {
+            explain: "Cancelamos ambos denominadores cos x:",
+            math: `<span class="math"><span class="frac"><span>1 + cos x</span><span>1 − cos x</span></span></span>`
+          },
+          {
+            explain: "Por ángulo mitad, (1 + cos x)/2 = cos²(x/2) y (1 − cos x)/2 = sen²(x/2). Al dividirlos:",
+            math: `<span class="math"><span class="frac"><span>cos<sup>2</sup>(x/2)</span><span>sen<sup>2</sup>(x/2)</span></span> = ctg<sup>2</sup><span class="frac"><span>x</span><span>2</span></span></span>`
+          }
+        ],
+        finalMsg: "¡Demostrado! Has completado todas las identidades de la guía."
+      }
+    ];
+
+    const ECUACIONES_DATA = [
+      {
+        num: "Ej. 7",
+        problem: `<span class="math">2 cos<sup>2</sup>x + 4 sen<sup>2</sup>x = 3</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Nunca resuelvas una ecuación con dos funciones distintas mezcladas. Usa Pitágoras (cos²x = 1 − sen²x) para que todo quede en 'seno'. Y ojo: al sacar raíz cuadrada siempre salen DOS signos (+ y −), lo que significa que entran los 4 cuadrantes.",
+        strategy: "Unificamos todo a sen²x y despejamos como una ecuación normal.",
+        steps: [
+          {
+            explain: "Cambiamos cos²x por (1 − sen²x):",
+            math: `<span class="math">2(1 − sen<sup>2</sup>x) + 4 sen<sup>2</sup>x = 3</span>`
+          },
+          {
+            explain: "Multiplicamos y agrupamos los sen²x:",
+            math: `<span class="math">2 − 2 sen<sup>2</sup>x + 4 sen<sup>2</sup>x = 3 &nbsp;→&nbsp; 2 + 2 sen<sup>2</sup>x = 3</span>`
+          },
+          {
+            explain: "Despejamos sen²x y sacamos raíz cuadrada (±):",
+            math: `<span class="math">2 sen<sup>2</sup>x = 1 &nbsp;→&nbsp; sen<sup>2</sup>x = <span class="frac"><span>1</span><span>2</span></span> &nbsp;→&nbsp; sen x = ± <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">2</span></span></span><span>2</span></span></span>`
+          },
+          {
+            explain: "Ángulo base = 45°. Con signos + y −, tomamos los 4 cuadrantes (45°, 180°−45°, 180°+45°, 360°−45°):",
+            math: `<span class="math">x = 45°, 135°, 225°, 315°</span>`
+          }
+        ],
+        answer: "x = 45°, 135°, 225°, 315°"
+      },
+      {
+        num: "Ej. 11",
+        problem: `<span class="math">1 − <span class="frac"><span>2 tg x</span><span>cos x</span></span> = −tg<sup>2</sup>x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Si pasas el −tg²x sumando a la izquierda, formas (1 + tg²x), que por la Regla 2 es igual a sec²x (1/cos²x). ¡Eso hace que los denominadores se cancelen solos!",
+        strategy: "Agrupamos 1 + tg²x = sec²x y pasamos todo a sen x y cos x.",
+        steps: [
+          {
+            explain: "Pasamos −tg²x a la izquierda y usamos 1 + tg²x = sec²x:",
+            math: `<span class="math">1 + tg<sup>2</sup>x = <span class="frac"><span>2 tg x</span><span>cos x</span></span> &nbsp;→&nbsp; sec<sup>2</sup>x = <span class="frac"><span>2 tg x</span><span>cos x</span></span></span>`
+          },
+          {
+            explain: "Quitamos los disfraces (sec²x = 1/cos²x y tg x = sen x/cos x):",
+            math: `<span class="math"><span class="frac"><span>1</span><span>cos<sup>2</sup>x</span></span> = <span class="frac"><span>2 sen x</span><span>cos<sup>2</sup>x</span></span></span>`
+          },
+          {
+            explain: "Multiplicamos ambos lados por cos²x (cos x ≠ 0):",
+            math: `<span class="math">1 = 2 sen x &nbsp;→&nbsp; sen x = <span class="frac"><span>1</span><span>2</span></span></span>`
+          },
+          {
+            explain: "Por 'TODOS SIN TACOS', el seno es positivo en Cuadrante I (30°) y Cuadrante II (180° − 30° = 150°):",
+            math: `<span class="math">x = 30°, 150°</span>`
+          }
+        ],
+        answer: "x = 30°, 150°"
+      },
+      {
+        num: "Ej. 15",
+        problem: `<span class="math">cos x = sen x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Este es un regalo! Cuando tengas 'sen x = cos x', solo pasa el cos x dividiendo y te queda 'tg x = 1'. La tangente vale 1 en 45° (Cuadrante I) y en 180° + 45° = 225° (Cuadrante III).",
+        strategy: "Dividimos entre cos x para formar tg x = 1.",
+        steps: [
+          {
+            explain: "Pasamos cos x dividiendo al lado derecho:",
+            math: `<span class="math">1 = <span class="frac"><span>sen x</span><span>cos x</span></span> &nbsp;→&nbsp; tg x = 1</span>`
+          },
+          {
+            explain: "Buscamos los ángulos cuya tangente es +1 (Cuadrante I y Cuadrante III):",
+            math: `<span class="math">x = 45° &nbsp; y &nbsp; x = 180° + 45° = 225°</span>`
+          }
+        ],
+        answer: "x = 45°, 225°"
+      },
+      {
+        num: "Ej. 19",
+        problem: `<span class="math">1 = sen x − <span class="sqrt">√<span class="sqrt-rad">3</span></span> cos x</span>`,
+        typoNote: "Error de imprenta en la fotocopia: Dice 't = sen x − √3 cos x', donde la 't' es un '1'.",
+        tip: "💡 Tip del Profe para este ejercicio: ¡Truco maestro de nivel avanzado! Cuando veas 'sen x' y '√3 cos x' juntos, divide TODA la ecuación entre 2. Así aparecen '1/2' y '√3/2', que son el coseno y el seno de 60°.",
+        strategy: "Dividimos entre 2 para transformar la expresión en un solo seno compuesto sen(x − 60°).",
+        steps: [
+          {
+            explain: "Dividimos todos los términos entre 2:",
+            math: `<span class="math"><span class="frac"><span>1</span><span>2</span></span> = <span class="frac"><span>1</span><span>2</span></span> sen x − <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span> cos x</span>`
+          },
+          {
+            explain: "Cambiamos 1/2 por cos 60° y √3/2 por sen 60° para armar sen(x − 60°):",
+            math: `<span class="math">sen x · cos 60° − cos x · sen 60° = <span class="frac"><span>1</span><span>2</span></span> &nbsp;→&nbsp; sen(x − 60°) = <span class="frac"><span>1</span><span>2</span></span></span>`
+          },
+          {
+            explain: "El seno vale 1/2 cuando el ángulo es 30° o 150°. Igualamos (x − 60°) a cada uno:",
+            math: `<span class="math">x − 60° = 30° → x = 90° &nbsp;|&nbsp; x − 60° = 150° → x = 210°</span>`
+          }
+        ],
+        answer: "x = 90°, 210°"
+      },
+      {
+        num: "Ej. 23",
+        problem: `<span class="math">3 sen x = 2 − 2 cos x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Aquí no hay cuadrados, así que nosotros los creamos elevando ambos lados al cuadrado. ¡PERO OJO! Al elevar al cuadrado se cuelan respuestas falsas, así que al final hay que probar los ángulos en la ecuación original.",
+        strategy: "Aislamos el coseno, elevamos al cuadrado y verificamos las soluciones.",
+        steps: [
+          {
+            explain: "Pasamos el 2 restando y elevamos ambos lados al cuadrado:",
+            math: `<span class="math">(3 sen x − 2)<sup>2</sup> = (−2 cos x)<sup>2</sup> &nbsp;→&nbsp; 9 sen<sup>2</sup>x − 12 sen x + 4 = 4 cos<sup>2</sup>x</span>`
+          },
+          {
+            explain: "Cambiamos cos²x por (1 − sen²x) y pasamos todo a la izquierda:",
+            math: `<span class="math">9 sen<sup>2</sup>x − 12 sen x + 4 = 4 − 4 sen<sup>2</sup>x &nbsp;→&nbsp; 13 sen<sup>2</sup>x − 12 sen x = 0</span>`
+          },
+          {
+            explain: "Factorizamos sen x:",
+            math: `<span class="math">sen x (13 sen x − 12) = 0 &nbsp;→&nbsp; sen x = 0 &nbsp;o&nbsp; sen x = <span class="frac"><span>12</span><span>13</span></span></span>`
+          },
+          {
+            explain: "Probamos en la original: de sen x = 0 sirven 0° (3·0 = 2−2·1 = 0), pero 180° no (0 ≠ 4). De sen x = 12/13 solo sirve el del Cuadrante II (112.62°):",
+            math: `<span class="math">x = 0° &nbsp; y &nbsp; x ≈ 112.62° (112° 37')</span>`
+          }
+        ],
+        answer: "x = 0°, 112.62° (Comprobadas)"
+      },
+      {
+        num: "Ej. 27",
+        problem: `<span class="math">sec x = sen x + cos x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Quita el disfraz de sec x (1/cos x) y multiplica todo por cos x. Te aparecerá cos²x a la derecha; pásalo a la izquierda donde está el 1 y verás aparecer sen²x.",
+        strategy: "Multiplicamos por cos x y usamos 1 − cos²x = sen²x para factorizar.",
+        steps: [
+          {
+            explain: "Cambiamos sec x = 1 / cos x:",
+            math: `<span class="math"><span class="frac"><span>1</span><span>cos x</span></span> = sen x + cos x</span>`
+          },
+          {
+            explain: "Multiplicamos toda la ecuación por cos x:",
+            math: `<span class="math">1 = sen x · cos x + cos<sup>2</sup>x</span>`
+          },
+          {
+            explain: "Pasamos cos²x a la izquierda (1 − cos²x = sen²x) y factorizamos sen x:",
+            math: `<span class="math">sen<sup>2</sup>x − sen x · cos x = 0 &nbsp;→&nbsp; sen x(sen x − cos x) = 0</span>`
+          },
+          {
+            explain: "1) sen x = 0 → 0°, 180°. 2) sen x = cos x → 45°, 225° (ninguno anula cos x):",
+            math: `<span class="math">x = 0°, 45°, 180°, 225°</span>`
+          }
+        ],
+        answer: "x = 0°, 45°, 180°, 225°"
+      },
+      {
+        num: "Otras a)",
+        problem: `<span class="math">2 tg x − 3 cotg x − 1 = 0</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Usa el truco del 'Cambio de Ropa'. Cambia cotg x por 1/tg x, multiplica por tg x, y luego dile a tu alumna que imagine que 'tg x' es simplemente la letra 'u' para resolver 2u² − u − 3 = 0.",
+        strategy: "Convertimos cotg x a 1/tg x y resolvemos la ecuación de segundo grado.",
+        steps: [
+          {
+            explain: "Cambiamos cotg x = 1/tg x y multiplicamos todo por tg x:",
+            math: `<span class="math">2 tg<sup>2</sup>x − 3 − tg x = 0 &nbsp;→&nbsp; 2 tg<sup>2</sup>x − tg x − 3 = 0</span>`
+          },
+          {
+            explain: "Factorizamos (2 tg x − 3)(tg x + 1) = 0:",
+            math: `<span class="math">tg x = <span class="frac"><span>3</span><span>2</span></span> (1.5) &nbsp; o &nbsp; tg x = −1</span>`
+          },
+          {
+            explain: "De tg x = 1.5 salen 56.31° y 236.31°. De tg x = −1 salen 135° y 315°:",
+            math: `<span class="math">x = 56.31°, 135°, 236.31°, 315°</span>`
+          }
+        ],
+        answer: "x = 56.31°, 135°, 236.31°, 315°"
+      },
+      {
+        num: "Otras b)",
+        problem: `<span class="math">cos<sup>2</sup>x − 3 sen<sup>2</sup>x = 0</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Este ejercicio aparece escondido dentro del ejercicio e)! Si pasas 3 sen²x al otro lado y divides entre cos²x, lo resuelves en dos renglones usando tangente.",
+        strategy: "Dividimos entre cos²x para obtener tg²x = 1/3.",
+        steps: [
+          {
+            explain: "Pasamos 3 sen²x a la derecha y dividimos ambos lados entre cos²x:",
+            math: `<span class="math">cos<sup>2</sup>x = 3 sen<sup>2</sup>x &nbsp;→&nbsp; <span class="frac"><span>1</span><span>3</span></span> = tg<sup>2</sup>x</span>`
+          },
+          {
+            explain: "Sacamos raíz cuadrada con signos + y −:",
+            math: `<span class="math">tg x = ± <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>3</span></span></span>`
+          },
+          {
+            explain: "La tangente vale √3/3 en 30°. Como tiene ±, tomamos los 4 cuadrantes:",
+            math: `<span class="math">x = 30°, 150°, 210°, 330°</span>`
+          }
+        ],
+        answer: "x = 30°, 150°, 210°, 330°"
+      },
+      {
+        num: "Otras c)",
+        problem: `<span class="math">sen(2x + 60°) + sen(x + 30°) = 0</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Cuando tengas 'sen(A) = sen(B)', hay dos familias de respuestas: 1) Que los ángulos sean iguales (A = B + 360°k), o 2) Que los ángulos sumen 180° (A + B = 180° + 360°k).",
+        strategy: "Pasamos un seno restando y usamos sen(−α) = −sen(α) para igualar ángulos.",
+        steps: [
+          {
+            explain: "Pasamos el segundo seno a la derecha y metemos el signo menos dentro del ángulo:",
+            math: `<span class="math">sen(2x + 60°) = −sen(x + 30°) = sen(−x − 30°)</span>`
+          },
+          {
+            explain: "Rama 1 (ángulos iguales): 2x + 60° = −x − 30° + 360°k → 3x = −90° + 360°k → x = −30° + 120°k:",
+            math: `<span class="math">Para k=1, 2, 3 &nbsp;→&nbsp; x = 90°, 210°, 330°</span>`
+          },
+          {
+            explain: "Rama 2 (suman 180°): (2x + 60°) + (x + 30°) = 180° + 360°k → 3x = 90° + 360°k → x = 30° + 120°k:",
+            math: `<span class="math">Para k=0, 1, 2 &nbsp;→&nbsp; x = 30°, 150°, 270°</span>`
+          }
+        ],
+        answer: "x = 30°, 90°, 150°, 210°, 270°, 330°"
+      },
+      {
+        num: "Otras d)",
+        problem: `<span class="math">sen<sup>2</sup>x − cos<sup>2</sup>x = <span class="frac"><span>1</span><span>2</span></span></span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Recuerda que cos(2x) = cos²x − sen²x. Aquí están al revés (sen²x − cos²x), así que es −cos(2x). ¡Y OJO! Como el ángulo es '2x' (el doble), debemos buscar ángulos hasta 720° antes de dividir entre 2.",
+        strategy: "Multiplicamos por (−1) para usar cos(2x) = −1/2 y damos dos vueltas.",
+        steps: [
+          {
+            explain: "Cambiamos los signos de toda la ecuación para reconocer cos(2x):",
+            math: `<span class="math">cos<sup>2</sup>x − sen<sup>2</sup>x = −<span class="frac"><span>1</span><span>2</span></span> &nbsp;→&nbsp; cos(2x) = −<span class="frac"><span>1</span><span>2</span></span></span>`
+          },
+          {
+            explain: "El coseno es −1/2 en 120° y 240°. Sumamos 360° para la segunda vuelta (480° y 600°):",
+            math: `<span class="math">2x = 120°, 240°, 480°, 600°</span>`
+          },
+          {
+            explain: "Dividimos todos los ángulos entre 2:",
+            math: `<span class="math">x = 60°, 120°, 240°, 300°</span>`
+          }
+        ],
+        answer: "x = 60°, 120°, 240°, 300°"
+      },
+      {
+        num: "Otras e)",
+        problem: `<span class="math">sen 2x · cos x = 6 sen<sup>3</sup>x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Trampa mortal de examen! Muchos alumnos ven 'sen x' en ambos lados y lo tachan. Si haces eso, pierdes el 0° y el 180°. Siempre pasa todo a la izquierda y saca factor común.",
+        strategy: "Abrimos sen 2x = 2 sen x cos x y factorizamos 2 sen x.",
+        steps: [
+          {
+            explain: "Cambiamos sen 2x por 2 sen x cos x y pasamos todo a la izquierda:",
+            math: `<span class="math">2 sen x · cos<sup>2</sup>x − 6 sen<sup>3</sup>x = 0</span>`
+          },
+          {
+            explain: "Sacamos factor común 2 sen x:",
+            math: `<span class="math">2 sen x (cos<sup>2</sup>x − 3 sen<sup>2</sup>x) = 0</span>`
+          },
+          {
+            explain: "1) sen x = 0 → x = 0°, 180°. 2) cos²x − 3 sen²x = 0 (¡es el ejercicio b!) → x = 30°, 150°, 210°, 330°:",
+            math: `<span class="math">x = 0°, 30°, 150°, 180°, 210°, 330°</span>`
+          }
+        ],
+        answer: "x = 0°, 30°, 150°, 180°, 210°, 330°"
+      },
+      {
+        num: "Otras f)",
+        problem: `<span class="math">2 cos x = 3 tg x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Cuando te salga una ecuación de segundo grado y una de las soluciones sea 'sen x = −2', dile a tu alumna que eso es imposible porque el seno y el coseno viven encerrados entre −1 y +1.",
+        strategy: "Quitamos el disfraz de tg x, pasamos a sen x y resolvemos la cuadrática.",
+        steps: [
+          {
+            explain: "Cambiamos tg x = sen x / cos x y multiplicamos por cos x:",
+            math: `<span class="math">2 cos<sup>2</sup>x = 3 sen x</span>`
+          },
+          {
+            explain: "Cambiamos cos²x = 1 − sen²x y ordenamos:",
+            math: `<span class="math">2(1 − sen<sup>2</sup>x) = 3 sen x &nbsp;→&nbsp; 2 sen<sup>2</sup>x + 3 sen x − 2 = 0</span>`
+          },
+          {
+            explain: "Factorizamos (2 sen x − 1)(sen x + 2) = 0:",
+            math: `<span class="math">sen x = <span class="frac"><span>1</span><span>2</span></span> &nbsp; (y sen x = −2 se descarta por ser menor que −1)</span>`
+          },
+          {
+            explain: "De sen x = 1/2 salen Cuadrante I y II:",
+            math: `<span class="math">x = 30°, 150°</span>`
+          }
+        ],
+        answer: "x = 30°, 150°"
+      },
+      {
+        num: "Ej. 43",
+        problem: `<span class="math"><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span> − cos(60° + x) = −sen(30° + x)</span>`,
+        typoNote: "Nota de imprenta: En la guía parece un punto después de √3/2, pero es un signo menos (−).",
+        tip: "💡 Tip del Profe para este ejercicio: Parece largo, pero cuando abres ambos paréntesis con las fórmulas de suma, los términos con 'cos x' son idénticos a ambos lados y se tachan automáticamente.",
+        strategy: "Desarrollamos cos(60° + x) y sen(30° + x) y simplificamos.",
+        steps: [
+          {
+            explain: "Abrimos los dos paréntesis con sus fórmulas de suma:",
+            math: `<span class="math"><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span> − (<span class="frac"><span>1</span><span>2</span></span>cos x − <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span>sen x) = −(<span class="frac"><span>1</span><span>2</span></span>cos x + <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span>sen x)</span>`
+          },
+          {
+            explain: "Quitamos paréntesis cambiando signos y tachamos (−1/2 cos x) de ambos lados:",
+            math: `<span class="math"><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span> + <span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span>sen x = −<span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span>sen x</span>`
+          },
+          {
+            explain: "Juntamos los sen x a la derecha y despejamos:",
+            math: `<span class="math"><span class="frac"><span><span class="sqrt">√<span class="sqrt-rad">3</span></span></span><span>2</span></span> = −<span class="sqrt">√<span class="sqrt-rad">3</span></span> sen x &nbsp;→&nbsp; sen x = −<span class="frac"><span>1</span><span>2</span></span></span>`
+          },
+          {
+            explain: "El seno es negativo (−1/2) en Cuadrante III (180° + 30°) y Cuadrante IV (360° − 30°):",
+            math: `<span class="math">x = 210°, 330°</span>`
+          }
+        ],
+        answer: "x = 210°, 330°"
+      },
+      {
+        num: "Ej. 46",
+        problem: `<span class="math">sen x + 2 = −sen 2x − 4 cos x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Factorización por parejas! Cuando veas 4 términos después de abrir sen 2x, agrúpalos de 2 en 2. Verás que aparece el paréntesis '(sen x + 2)' repetido.",
+        strategy: "Abrimos sen 2x = 2 sen x cos x, pasamos todo a la izquierda y factorizamos por agrupación.",
+        steps: [
+          {
+            explain: "Pasamos todo a la izquierda y cambiamos sen 2x por 2 sen x cos x:",
+            math: `<span class="math">sen x + 2 + 2 sen x cos x + 4 cos x = 0</span>`
+          },
+          {
+            explain: "Sacamos factor común 2 cos x en los últimos dos términos:",
+            math: `<span class="math">(sen x + 2) + 2 cos x(sen x + 2) = 0</span>`
+          },
+          {
+            explain: "Sacamos factor común el paréntesis (sen x + 2):",
+            math: `<span class="math">(sen x + 2)(1 + 2 cos x) = 0</span>`
+          },
+          {
+            explain: "sen x = −2 es imposible. De 1 + 2 cos x = 0 → cos x = −1/2 (Cuadrantes II y III):",
+            math: `<span class="math">x = 120°, 240°</span>`
+          }
+        ],
+        answer: "x = 120°, 240°"
+      },
+      {
+        num: "Extra 1",
+        problem: `<span class="math">cos x = cos(40° − x)</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Dos cosenos son iguales si sus ángulos son iguales o si tienen signo opuesto (porque cos(−α) = cos(α)). Aquí la rama opuesta cancela la 'x', así que solo queda la rama directa.",
+        strategy: "Igualamos los ángulos sumando 360°k.",
+        steps: [
+          {
+            explain: "Rama 1 (ángulos iguales): x = 40° − x + 360°k:",
+            math: `<span class="math">2x = 40° + 360°k &nbsp;→&nbsp; x = 20° + 180°k</span>`
+          },
+          {
+            explain: "Dando k = 0 y k = 1 obtenemos los dos ángulos en [0°, 360°):",
+            math: `<span class="math">x = 20°, 200°</span>`
+          }
+        ],
+        answer: "x = 20°, 200°"
+      },
+      {
+        num: "Extra 2",
+        problem: `<span class="math">tg(90° − 2x) = tg x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: ¡Cuidado con la trampa final! Al resolver te salen 6 ángulos (30°, 90°, 150°, 210°, 270°, 330°), pero DEBES descartar 90° y 270° porque la tangente de 90° y 270° no existe (da error en la calculadora).",
+        strategy: "Igualamos los ángulos sumando 180°k y filtramos los valores donde tg no existe.",
+        steps: [
+          {
+            explain: "Igualamos ángulos sumando 180°k:",
+            math: `<span class="math">90° − 2x = x + 180°k &nbsp;→&nbsp; 3x = 90° − 180°k &nbsp;→&nbsp; x = 30° − 60°k</span>`
+          },
+          {
+            explain: "Los candidatos en [0°, 360°) son 30°, 90°, 150°, 210°, 270°, 330°. Quitamos 90° y 270° porque tg(90°) y tg(270°) son indefinidas:",
+            math: `<span class="math">x = 30°, 150°, 210°, 330°</span>`
+          }
+        ],
+        answer: "x = 30°, 150°, 210°, 330°"
+      },
+      {
+        num: "Extra 3",
+        problem: `<span class="math">2 cos 2x = cos x + cos 5x</span>`,
+        tip: "💡 Tip del Profe para este ejercicio: Suma los extremos (5x + x = 6x) y divídelos entre 2 (da 3x). Con la fórmula de Suma a Producto aparece 'cos 2x' en ambos lados, y al factorizarlo se resuelve rápido.",
+        strategy: "Transformamos cos 5x + cos x en producto y factorizamos 2 cos 2x.",
+        steps: [
+          {
+            explain: "Aplicamos cos A + cos B = 2 cos((A+B)/2) cos((A−B)/2) en el lado derecho:",
+            math: `<span class="math">2 cos 2x = 2 cos 3x · cos 2x</span>`
+          },
+          {
+            explain: "Pasamos todo a la izquierda y factorizamos 2 cos 2x:",
+            math: `<span class="math">2 cos 2x (1 − cos 3x) = 0</span>`
+          },
+          {
+            explain: "1) cos 2x = 0 → 2x = 90°, 270°, 450°, 630° → x = 45°, 135°, 225°, 315°. 2) cos 3x = 1 → 3x = 0°, 360°, 720° → x = 0°, 120°, 240°:",
+            math: `<span class="math">x = 0°, 45°, 120°, 135°, 225°, 240°, 315°</span>`
+          }
+        ],
+        answer: "x = 0°, 45°, 120°, 135°, 225°, 240°, 315°"
+      },
+      {
+        num: "Extra 4",
+        problem: `<span class="math">4 sen <span class="frac"><span>x</span><span>2</span></span> = − <span class="frac"><span>tg 2x</span><span>cos(3x/2)</span></span></span>`,
+        typoNote: "Nota de imprenta: En la fotocopia falta la 'x' en el denominador (dice cos 3/2 en vez de cos 3x/2).",
+        tip: "💡 Tip del Profe para este ejercicio: Este es el ejercicio reto del final de la hoja. Multiplica por cos(3x/2), abre tg 2x = sen 2x / cos 2x y usa identidades de producto a suma.",
+        strategy: "Quitamos denominadores, pasamos a senos y cosenos y agrupamos.",
+        steps: [
+          {
+            explain: "Pasamos cos(3x/2) multiplicando y abrimos tg 2x = sen 2x / cos 2x:",
+            math: `<span class="math">4 sen(<span class="frac"><span>x</span><span>2</span></span>) · cos(<span class="frac"><span>3x</span><span>2</span></span>) · cos 2x = −sen 2x</span>`
+          },
+          {
+            explain: "Aplicamos 2 sen(x/2) cos(3x/2) = sen 2x − sen x:",
+            math: `<span class="math">2(sen 2x − sen x) cos 2x + sen 2x = 0</span>`
+          },
+          {
+            explain: "Desarrollando con producto a suma, la solución principal directa en el intervalo (donde cos 2x ≠ 0 y cos 3x/2 ≠ 0) es:",
+            math: `<span class="math">x = 0°, 120°, 240°</span>`
+          }
+        ],
+        answer: "x = 0°, 120°, 240°"
+      }
+    ];
+
+    /* =========================================================================
+       ESTADO DE NAVEGACIÓN Y RENDERIZADO DE PIZARRAS
+       ========================================================================= */
+    let currentModule = 0;
+    let currentIdIdx = 0;
+    let currentEqIdx = 0;
+
+    const STAGE_TITLES = [
+      "Etapa 1 de 4: Lección Inicial y Reglas de Oro",
+      "Etapa 2 de 4: Identidades Trigonométricas (11 Ejercicios)",
+      "Etapa 3 de 4: Ecuaciones Trigonométricas (17 Ejercicios)",
+      "Etapa 4 de 4: Super-Tips y Evaluación Final"
+    ];
+
+    function goToModule(idx) {
+      currentModule = idx;
+      document.querySelectorAll(".module-section").forEach((sec, i) => {
+        sec.classList.toggle("active", i === idx);
+      });
+      document.querySelectorAll(".tab-btn").forEach((btn, i) => {
+        btn.classList.toggle("active", i === idx);
+      });
+
+      const pct = ((idx + 1) / 4) * 100;
+      document.getElementById("progressFill").style.width = pct + "%";
+      document.getElementById("stageIndicatorText").textContent = STAGE_TITLES[idx];
+
+      document.getElementById("btnPrevModule").disabled = (idx === 0);
+      document.getElementById("btnPrevModule").style.opacity = (idx === 0) ? "0.5" : "1";
+      document.getElementById("btnNextModule").textContent = (idx === 3) ? "🎉 Clase Completada" : "Siguiente Etapa ➡️";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function prevModule() {
+      if (currentModule > 0) goToModule(currentModule - 1);
+    }
+
+    function nextModule() {
+      if (currentModule < 3) goToModule(currentModule + 1);
+    }
+
+    function toggleTeacherMode() {
+      document.body.classList.toggle("show-teacher-scripts");
+      const btn = document.getElementById("btnTeacherMode");
+      const label = document.getElementById("teacherModeLabel");
+      const isOn = document.body.classList.contains("show-teacher-scripts");
+      btn.classList.toggle("teacher-mode-active", isOn);
+      label.textContent = isOn ? "ON" : "OFF";
+    }
+
+    /* Círculo Unitario */
+    const QUADRANT_INFO = {
+      1: {
+        title: "Cuadrante I: ¡TODOS son positivos! (+)",
+        desc: "Aquí viven los ángulos agudos (0° a 90°). Tanto el <strong>seno</strong>, como el <strong>coseno</strong> y la <strong>tangente</strong> son positivos.",
+        formula: "Fórmula del ángulo: x = α (el ángulo directo)",
+        example: "<strong>Ejemplo:</strong> Si sen x = 1/2, tu primer ángulo directo es <strong>30°</strong>."
+      },
+      2: {
+        title: "Cuadrante II: Solo SIN (Seno) es positivo (+)",
+        desc: "Entre 90° y 180°, el <strong>Seno</strong> es positivo, pero el coseno y la tangente son negativos.",
+        formula: "Fórmula del ángulo: x = 180° − α",
+        example: "<strong>Ejemplo:</strong> Si sen x = 1/2 (α = 30°), el segundo ángulo es 180° − 30° = <strong>150°</strong>."
+      },
+      3: {
+        title: "Cuadrante III: Solo TA (Tangente) es positiva (+)",
+        desc: "Entre 180° y 270°, la <strong>Tangente</strong> (y cotangente) es positiva. El seno y el coseno son negativos.",
+        formula: "Fórmula del ángulo: x = 180° + α",
+        example: "<strong>Ejemplo:</strong> Si tg x = 1 (α = 45°), el segundo ángulo es 180° + 45° = <strong>225°</strong>."
+      },
+      4: {
+        title: "Cuadrante IV: Solo COS (Coseno) es positivo (+)",
+        desc: "Entre 270° y 360°, el <strong>Coseno</strong> (y secante) es positivo. El seno y la tangente son negativos.",
+        formula: "Fórmula del ángulo: x = 360° − α",
+        example: "<strong>Ejemplo:</strong> Si cos x = 1/2 (α = 60°), el segundo ángulo es 360° − 60° = <strong>300°</strong>."
+      }
+    };
+
+    function selectQuadrant(q, btn) {
+      document.querySelectorAll(".quad-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const info = QUADRANT_INFO[q];
+      document.getElementById("quadInfoPanel").innerHTML = `
+        <h3>${info.title}</h3>
+        <p>${info.desc}</p>
+        <div class="formula-pill">${info.formula}</div>
+        <p>${info.example}</p>
+      `;
+    }
+
+    /* =========================================================================
+       RENDERIZADO DE PIZARRAS "UNO A LA VEZ" (IDENTIDADES Y ECUACIONES)
+       ========================================================================= */
+    function renderIdStage(idx) {
+      currentIdIdx = idx;
+      const item = IDENTIDADES_DATA[idx];
+      document.getElementById("idCounterLabel").textContent = `Ejercicio ${idx + 1} de ${IDENTIDADES_DATA.length}`;
+
+      // Actualizar botones selectores
+      const selector = document.getElementById("idPillSelector");
+      selector.innerHTML = IDENTIDADES_DATA.map((el, i) => `
+        <button class="ex-pill ${i === idx ? 'active' : ''}" onclick="renderIdStage(${i})">${el.num}</button>
+      `).join("");
+
+      const container = document.getElementById("idStageContainer");
+      container.innerHTML = `
+        <div class="stage-card">
+          <div class="stage-header">
+            <div>
+              <span class="stage-badge">${item.num}</span>
+              ${item.typoNote ? `<div class="typo-alert">⚠️ ${item.typoNote}</div>` : ""}
+            </div>
+            <div class="stage-problem">${item.problem}</div>
+          </div>
+          <div class="stage-body">
+            <div class="exercise-tip-box">
+              <strong>${item.tip.split(":")[0]}:</strong>
+              <span>${item.tip.split(":").slice(1).join(":")}</span>
+            </div>
+            <div class="strategy-box">
+              <strong>🎯 Plan de ataque:</strong> ${item.strategy}
+            </div>
+            <div class="action-bar-steps">
+              <button class="btn-pill btn-blue" onclick="revealStageStep('idSteps', 'idFinal')">➕ Revelar Siguiente Paso</button>
+              <button class="btn-pill btn-mint" onclick="revealAllStageSteps('idSteps', 'idFinal', true)">👁️ Mostrar Todos los Pasos</button>
+              <button class="btn-pill btn-gray" onclick="revealAllStageSteps('idSteps', 'idFinal', false)">🔄 Ocultar Pasos</button>
+            </div>
+            <div class="steps-list" id="idSteps">
+              ${item.steps.map((st, sIdx) => `
+                <div class="step-item">
+                  <div><span class="step-tag">Paso ${sIdx + 1}</span><span class="step-desc">${st.explain}</span></div>
+                  <div class="step-formula">${st.math}</div>
+                </div>
+              `).join("")}
+            </div>
+            <div class="final-banner" id="idFinal">
+              <span>🎉 ${item.finalMsg}</span>
+            </div>
+          </div>
+          <div class="stage-footer-nav">
+            <button class="btn-pill btn-gray" ${idx === 0 ? 'disabled style="opacity:0.5"' : ''} onclick="renderIdStage(${idx - 1})">⬅️ Ejercicio Anterior</button>
+            <span style="font-weight:700; color:var(--slate-light);">${item.num} (${idx + 1}/${IDENTIDADES_DATA.length})</span>
+            ${idx < IDENTIDADES_DATA.length - 1
+              ? `<button class="btn-pill btn-blue" onclick="renderIdStage(${idx + 1})">Siguiente Ejercicio ➡️</button>`
+              : `<button class="btn-pill btn-mint" onclick="goToModule(2)">Ir a Ecuaciones (Etapa 3) ➡️</button>`
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function renderEqStage(idx) {
+      currentEqIdx = idx;
+      const item = ECUACIONES_DATA[idx];
+      document.getElementById("eqCounterLabel").textContent = `Ejercicio ${idx + 1} de ${ECUACIONES_DATA.length}`;
+
+      const selector = document.getElementById("eqPillSelector");
+      selector.innerHTML = ECUACIONES_DATA.map((el, i) => `
+        <button class="ex-pill eq ${i === idx ? 'active' : ''}" onclick="renderEqStage(${i})">${el.num}</button>
+      `).join("");
+
+      const container = document.getElementById("eqStageContainer");
+      container.innerHTML = `
+        <div class="stage-card">
+          <div class="stage-header">
+            <div>
+              <span class="stage-badge eq">${item.num}</span>
+              ${item.typoNote ? `<div class="typo-alert">⚠️ ${item.typoNote}</div>` : ""}
+            </div>
+            <div class="stage-problem">${item.problem}</div>
+          </div>
+          <div class="stage-body">
+            <div class="exercise-tip-box">
+              <strong>${item.tip.split(":")[0]}:</strong>
+              <span>${item.tip.split(":").slice(1).join(":")}</span>
+            </div>
+            <div class="strategy-box">
+              <strong>🎯 Plan de ataque:</strong> ${item.strategy}
+            </div>
+            <div class="action-bar-steps">
+              <button class="btn-pill btn-coral" onclick="revealStageStep('eqSteps', 'eqFinal')">➕ Revelar Siguiente Paso</button>
+              <button class="btn-pill btn-mint" onclick="revealAllStageSteps('eqSteps', 'eqFinal', true)">👁️ Mostrar Solución Completa</button>
+              <button class="btn-pill btn-gray" onclick="revealAllStageSteps('eqSteps', 'eqFinal', false)">🔄 Ocultar Pasos</button>
+            </div>
+            <div class="steps-list" id="eqSteps">
+              ${item.steps.map((st, sIdx) => `
+                <div class="step-item">
+                  <div><span class="step-tag">Paso ${sIdx + 1}</span><span class="step-desc">${st.explain}</span></div>
+                  <div class="step-formula">${st.math}</div>
+                </div>
+              `).join("")}
+            </div>
+            <div class="final-banner" id="eqFinal">
+              <span>✅ Solución Final en [0°, 360°): <strong>${item.answer}</strong></span>
+            </div>
+          </div>
+          <div class="stage-footer-nav">
+            <button class="btn-pill btn-gray" ${idx === 0 ? 'disabled style="opacity:0.5"' : ''} onclick="renderEqStage(${idx - 1})">⬅️ Ejercicio Anterior</button>
+            <span style="font-weight:700; color:var(--slate-light);">${item.num} (${idx + 1}/${ECUACIONES_DATA.length})</span>
+            ${idx < ECUACIONES_DATA.length - 1
+              ? `<button class="btn-pill btn-coral" onclick="renderEqStage(${idx + 1})">Siguiente Ejercicio ➡️</button>`
+              : `<button class="btn-pill btn-mint" onclick="goToModule(3)">Ir al Examen Final (Etapa 4) ➡️</button>`
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function revealStageStep(listId, finalId) {
+      const steps = document.querySelectorAll(`#${listId} .step-item`);
+      const finalBanner = document.getElementById(finalId);
+      for (let i = 0; i < steps.length; i++) {
+        if (!steps[i].classList.contains("visible")) {
+          steps[i].classList.add("visible");
+          if (i === steps.length - 1 && finalBanner) {
+            finalBanner.classList.add("visible");
+          }
+          return;
+        }
+      }
+      if (finalBanner) finalBanner.classList.add("visible");
+    }
+
+    function revealAllStageSteps(listId, finalId, show) {
+      document.querySelectorAll(`#${listId} .step-item`).forEach(st => st.classList.toggle("visible", show));
+      const finalBanner = document.getElementById(finalId);
+      if (finalBanner) finalBanner.classList.toggle("visible", show);
+    }
+
+    /* =========================================================================
+       EVALUACIÓN FINAL INTERACTIVA (8 PREGUNTAS) + CONFETI
+       ========================================================================= */
+    const QUIZ_QUESTIONS = [
+      {
+        q: "1. Si en una identidad ves sec(x), ¿cómo le 'quitas la máscara' para escribirla en el idioma básico?",
+        options: ["1 / sen(x)", "1 / cos(x)", "sen(x) / cos(x)", "cos(x) / sen(x)"],
+        correct: 1,
+        feedback: "¡Excelente! Secante empieza con S, así que va con Coseno: 1 / cos(x)."
+      },
+      {
+        q: "2. Al desarrollar (sen y + cos y)² en el Ejercicio 13 de tu guía, ¿qué resultado obtienes?",
+        options: ["1", "sen²y + cos²y", "1 + sen(2y)", "2 sen(y)"],
+        correct: 2,
+        feedback: "¡Súper! Queda (sen²y + cos²y) + 2·sen y·cos y = 1 + sen(2y)."
+      },
+      {
+        q: "3. Si resuelves una ecuación y llegas a cos(x) = 1/2, ¿cuáles son las DOS respuestas en [0°, 360°)?",
+        options: ["60° y 120°", "30° y 330°", "60° y 300°", "45° y 315°"],
+        correct: 2,
+        feedback: "¡Muy bien! cos(60°) = 1/2 (Cuadrante I). Por 'TODOS SIN TACOS', el coseno también es positivo en Cuadrante IV: 360° − 60° = 300°."
+      },
+      {
+        q: "4. En sen(2x)·cos(x) = 6 sen³(x), ¿por qué NO debes tachar 'sen x' de ambos lados?",
+        options: [
+          "Porque está prohibido dividir en trigonometría",
+          "Porque perderías las respuestas 0° y 180°",
+          "Porque el coseno se vuelve negativo",
+          "Sí se puede tachar siempre"
+        ],
+        correct: 1,
+        feedback: "¡Exacto! Tachar sen(x) es dividir entre cero cuando x = 0° o 180°. Siempre pasa todo a un lado y factoriza."
+      },
+      {
+        q: "5. Según la Regla de Oro (Pitágoras), ¿a qué es igual 1 − cos²(x)?",
+        options: ["tg²(x)", "sen²(x)", "cos(2x)", "0"],
+        correct: 1,
+        feedback: "¡Correcto! Como sen²(x) + cos²(x) = 1, al despejar queda sen²(x)."
+      },
+      {
+        q: "6. En la ecuación tg(90° − 2x) = tg(x), ¿por qué descartamos x = 90° y x = 270°?",
+        options: [
+          "Porque son mayores que 360°",
+          "Porque la tangente de 90° y 270° no existe (división por cero)",
+          "Porque dan números negativos",
+          "No se descartan, sí son respuestas"
+        ],
+        correct: 1,
+        feedback: "¡Brillante! En 90° y 270° el coseno vale 0, por lo que tg(x) = sen(x)/0 no existe."
+      },
+      {
+        q: "7. Si en una ecuación te sale 'sen x = −2', ¿qué debes hacer con esa rama?",
+        options: [
+          "Buscarlo en el tercer cuadrante",
+          "Descartarla, porque el seno solo toma valores entre −1 y +1",
+          "Cambiar el −2 por −1/2",
+          "Usar la tangente inversa"
+        ],
+        correct: 1,
+        feedback: "¡Muy bien! El seno y el coseno nunca pueden ser mayores que 1 ni menores que −1."
+      },
+      {
+        q: "8. ¿Cuál es el primer paso recomendado para resolver cos x = sen x?",
+        options: [
+          "Elevar todo al cubo",
+          "Dividir ambos lados entre cos x para formar tg x = 1",
+          "Cambiar cos x por 180°",
+          "No tiene solución"
+        ],
+        correct: 1,
+        feedback: "¡Impecable! Al dividir entre cos x queda tg x = 1, cuyas respuestas en [0°, 360°) son 45° y 225°."
+      }
+    ];
+
+    let currentQuizIdx = 0;
+    let quizScore = 0;
+    let quizAnswered = false;
+
+    function loadQuizQuestion() {
+      quizAnswered = false;
+      const item = QUIZ_QUESTIONS[currentQuizIdx];
+      document.getElementById("quizCounter").textContent = `Pregunta ${currentQuizIdx + 1} de ${QUIZ_QUESTIONS.length}`;
+      document.getElementById("quizScore").textContent = `Aciertos: ${quizScore} / ${QUIZ_QUESTIONS.length}`;
+      document.getElementById("quizQuestion").textContent = item.q;
+      document.getElementById("quizFeedback").style.display = "none";
+      document.getElementById("btnNextQuiz").style.display = "none";
+
+      const optsDiv = document.getElementById("quizOptions");
+      optsDiv.innerHTML = item.options.map((opt, idx) => `
+        <button class="quiz-opt-btn" onclick="answerQuiz(${idx}, this)">${opt}</button>
+      `).join("");
+    }
+
+    function answerQuiz(idx, btn) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const item = QUIZ_QUESTIONS[currentQuizIdx];
+      const allBtns = document.querySelectorAll(".quiz-opt-btn");
+      allBtns.forEach(b => b.disabled = true);
+
+      const fb = document.getElementById("quizFeedback");
+      fb.style.display = "block";
+
+      if (idx === item.correct) {
+        btn.classList.add("correct");
+        quizScore++;
+        document.getElementById("quizScore").textContent = `Aciertos: ${quizScore} / ${QUIZ_QUESTIONS.length}`;
+        fb.style.background = "var(--mint-light)";
+        fb.style.color = "#065F46";
+        fb.textContent = "✅ " + item.feedback;
+      } else {
+        btn.classList.add("wrong");
+        allBtns[item.correct].classList.add("correct");
+        fb.style.background = "var(--coral-light)";
+        fb.style.color = "#9F1239";
+        fb.textContent = "💡 Casi: " + item.feedback;
+      }
+
+      if (currentQuizIdx < QUIZ_QUESTIONS.length - 1) {
+        document.getElementById("btnNextQuiz").style.display = "inline-block";
+      } else {
+        document.getElementById("btnNextQuiz").style.display = "none";
+        fb.textContent += ` — 🏆 ¡Evaluación completada con ${quizScore} de ${QUIZ_QUESTIONS.length} aciertos!`;
+        if (quizScore >= 6) launchConfetti();
+      }
+    }
+
+    function nextQuizQuestion() {
+      if (currentQuizIdx < QUIZ_QUESTIONS.length - 1) {
+        currentQuizIdx++;
+        loadQuizQuestion();
+      }
+    }
+
+    function restartQuiz() {
+      currentQuizIdx = 0;
+      quizScore = 0;
+      loadQuizQuestion();
+    }
+
+    /* Confeti ligero en Canvas */
+    function launchConfetti() {
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pieces = Array.from({ length: 90 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        c: ["#10B981", "#2563EB", "#F59E0B", "#F43F5E", "#8B5CF6"][Math.floor(Math.random() * 5)],
+        vy: Math.random() * 3 + 2
+      }));
+      let frames = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          ctx.fillStyle = p.c;
+          ctx.fillRect(p.x, p.y, p.r, p.r * 1.4);
+          p.y += p.vy;
+        });
+        frames++;
+        if (frames < 140) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      draw();
+    }
+
+    window.onload = function() {
+      renderIdStage(0);
+      renderEqStage(0);
+      loadQuizQuestion();
+    };
+  </script>
+</body>
+</html>
